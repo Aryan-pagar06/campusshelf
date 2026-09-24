@@ -1,73 +1,272 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: #fbf8fc;
+  --color-on-background: #1b1b1e;
+  --color-surface: #fbf8fc;
+  --color-on-surface: #1b1b1e;
+  --color-on-surface-variant: #444653;
+  --color-surface-container: #f0edf1;
+  --color-surface-container-low: #f6f2f7;
+  --color-surface-container-high: #eae7eb;
+  --color-surface-container-highest: #e4e1e6;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-bright: #fbf8fc;
+  --color-surface-dim: #dcd9dd;
+  --color-surface-variant: #e4e1e6;
+
+  --color-primary: #00288e;
+  --color-primary-container: #1e40af;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #a8b8ff;
+  --color-primary-fixed: #dde1ff;
+  --color-primary-fixed-dim: #b8c4ff;
+  --color-on-primary-fixed: #001453;
+  --color-on-primary-fixed-variant: #173bab;
+
+  --color-secondary: #bb0112;
+  --color-secondary-container: #e02928;
+  --color-secondary-fixed: #ffdad6;
+  --color-secondary-fixed-dim: #ffb4ab;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-fixed: #410002;
+  --color-on-secondary-fixed-variant: #93000b;
+  --color-on-secondary-container: #fffbff;
+
+  --color-tertiary: #735c00;
+  --color-tertiary-container: #cea700;
+  --color-tertiary-fixed: #ffe083;
+  --color-tertiary-fixed-dim: #eec200;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #4e3e00;
+  --color-on-tertiary-fixed: #231b00;
+  --color-on-tertiary-fixed-variant: #574500;
+
+  --color-outline: #757684;
+  --color-outline-variant: #c4c5d5;
+  --color-inverse-surface: #303033;
+  --color-inverse-on-surface: #f3f0f4;
+  --color-inverse-primary: #b8c4ff;
+  --color-surface-tint: #3755c3;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --font-display-lg: "Space Grotesk", sans-serif;
+  --font-headline-lg: "Space Grotesk", sans-serif;
+  --font-headline-md: "Space Grotesk", sans-serif;
+  --font-headline-sm: "Space Grotesk", sans-serif;
+  --font-label-stamp: "Space Grotesk", sans-serif;
+  --font-body-lg: "Plus Jakarta Sans", sans-serif;
+  --font-body-md: "Plus Jakarta Sans", sans-serif;
+  --font-body-sm: "Plus Jakarta Sans", sans-serif;
+  --font-label-md: "Plus Jakarta Sans", sans-serif;
+  --font-label-lg: "Plus Jakarta Sans", sans-serif;
+
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2rem;
+  --spacing-space-2xl: 3rem;
+  --spacing-gutter: 1.5rem;
+  --spacing-margin: 2.5rem;
+  --spacing-gutter-mobile: 1rem;
+  --spacing-margin-mobile: 1rem;
+}
+
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background, #fbf8fc);
+    color: var(--color-on-surface, #1b1b1e);
+    font-family: 'Plus Jakarta Sans', sans-serif;
   }
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+/* Tactile Paper Grid Texture */
+.paper-grid {
+  background-color: #faf7f2;
+  background-image: radial-gradient(#d6d3cd 0.75px, transparent 0.75px);
+  background-size: 16px 16px;
+}
+
+/* Organic Pen Underline Effect */
+.pen-underline {
+  position: relative;
+}
+
+.pen-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 3px;
+  background-color: #1e40af;
+  border-radius: 9999px;
+  opacity: 0.9;
+  transform: rotate(-0.5deg);
+}
+
+/* Material Symbols styling */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Editorial Typography Classes */
+.font-display-lg {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 3.5rem;
+  line-height: 4rem;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.text-display-lg {
+  font-size: 3.5rem;
+  line-height: 4rem;
+  letter-spacing: -0.03em;
+}
+
+.text-display-lg-mobile {
+  font-size: 2.25rem;
+  line-height: 2.75rem;
+  letter-spacing: -0.02em;
+}
+
+.font-headline-lg {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem;
+  line-height: 2.5rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.text-headline-lg {
+  font-size: 2rem;
+  line-height: 2.5rem;
+  letter-spacing: -0.02em;
+}
+
+.font-headline-md {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+.text-headline-md {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  letter-spacing: -0.015em;
+}
+
+.font-headline-sm {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+.text-headline-sm {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
+.font-label-stamp {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.text-label-stamp {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.08em;
+}
+
+.font-body-lg {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 400;
+}
+
+.text-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.font-body-md {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+}
+
+.text-body-md {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.font-body-sm {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+}
+
+.text-body-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.font-label-lg {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.01em;
+  font-weight: 600;
+}
+
+.text-label-lg {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.01em;
+}
+
+.font-label-md {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+
+.text-label-md {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.02em;
 }

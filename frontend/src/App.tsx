@@ -1,33 +1,66 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { HomePage } from './components/home/HomePage';
+import { Header } from './components/home/Header';
+import { Footer } from './components/home/Footer';
 
-function App() {
-  const [count, setCount] = useState(0);
+export const App: React.FC = () => {
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
+
+  // Standard Landing Page at '/'
+  if (currentPath === '/' || currentPath === '') {
+    return <HomePage />;
+  }
+
+  // Placeholder for pending routes so navigation does not crash
+  const routeNames: Record<string, string> = {
+    '/browse': 'Browse Catalog',
+    '/list-resource': 'List a Resource',
+    '/wishlist': 'Your Wishlist',
+    '/requests': 'Resource Requests',
+    '/notifications': 'Notifications',
+    '/profile': 'User Profile',
+    '/about': 'About CampusShelf',
+  };
+
+  const title = routeNames[currentPath] || 'Page Under Construction';
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50 text-slate-900">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 border border-slate-200 text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
-          CampusShelf
-        </h1>
-        <p className="text-sm text-slate-600 mb-6">
-          Phase 1: Environment & Project Scaffolding Ready
-        </p>
-
-        <div className="bg-slate-100 rounded-lg p-4 mb-6 text-xs text-left font-mono space-y-1 text-slate-700">
-          <div>Frontend: React + Vite + TypeScript</div>
-          <div>Styling: Tailwind CSS v4 + shadcn/ui base</div>
-          <div>Backend API Target: /api/health</div>
+    <div className="bg-background min-h-screen flex flex-col text-on-surface">
+      <Header />
+      <main className="flex-grow pt-24 pb-16 px-6 max-w-4xl mx-auto flex flex-col items-center justify-center text-center">
+        <div className="bg-surface-container-lowest border border-outline-variant/60 rounded p-8 sm:p-12 shadow-sm max-w-lg w-full">
+          <span className="font-label-stamp text-label-stamp uppercase tracking-widest text-primary font-bold block mb-2">
+            [ CAMPUSSHELF // NAVIGATION ]
+          </span>
+          <h1 className="font-headline-lg text-headline-lg text-on-surface font-bold mb-4">
+            {title}
+          </h1>
+          <p className="font-body-md text-body-md text-on-surface-variant mb-8 leading-relaxed">
+            This section will be fully implemented in an upcoming phase according to the approved CampusShelf roadmap.
+          </p>
+          <a
+            href="/"
+            className="inline-flex items-center gap-2 bg-primary-container text-on-secondary px-6 py-3 font-headline-sm text-headline-sm rounded shadow-sm hover:bg-primary transition-all cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-lg">arrow_back</span>
+            <span>BACK TO HOME</span>
+          </a>
         </div>
-
-        <button
-          onClick={() => setCount((c) => c + 1)}
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors shadow-sm cursor-pointer"
-        >
-          Interactive Test: Clicked {count} times
-        </button>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
-}
+};
 
 export default App;
