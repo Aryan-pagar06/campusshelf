@@ -1,192 +1,205 @@
-import React, { useState } from 'react';
-import { HOME_IMAGES } from '../../constants/images';
-import { navigateTo } from '../../lib/navigation';
+import { useEffect, useState } from 'react';
 
 interface HeaderProps {
   activePath?: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activePath }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const current = activePath || (typeof window !== 'undefined' ? window.location.pathname : '/');
+interface NavItem {
+  label: string;
+  path: string;
+}
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
-    e.preventDefault();
-    setMobileMenuOpen(false);
-    navigateTo(path);
+const navItems: NavItem[] = [
+  { label: 'Home', path: '/' },
+  { label: 'Browse', path: '/browse' },
+  { label: 'List Resource', path: '/list-resource' },
+  { label: 'Wishlist', path: '/wishlist' },
+  { label: 'Requests', path: '/requests' },
+];
+
+export function Header({ activePath }: HeaderProps) {
+  const [currentPath, setCurrentPath] = useState(
+    activePath || window.location.pathname
+  );
+
+  useEffect(() => {
+    const updatePath = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', updatePath);
+
+    return () => {
+      window.removeEventListener('popstate', updatePath);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activePath) {
+      setCurrentPath(activePath);
+    } else {
+      setCurrentPath(window.location.pathname);
+    }
+  }, [activePath]);
+
+  const handleNavigation = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    path: string
+  ) => {
+    event.preventDefault();
+
+    if (window.location.pathname === path) {
+      setCurrentPath(path);
+      return;
+    }
+
+    window.history.pushState({}, '', path);
+    setCurrentPath(path);
+
+    window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
-  const isHome = current === '/' || current === '';
-  const isBrowse = current === '/browse';
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#faf7f2]/95 backdrop-blur-md border-b border-outline-variant/60 shadow-[0_1px_8px_rgba(0,0,0,0.02)]">
-      <div className="h-16 max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between">
-        {/* Brand */}
-        <div className="flex items-center gap-6">
+    <header className="fixed top-0 z-50 w-full border-b border-[#c4c5d5]/60 bg-[#faf7f2]/95 shadow-[0_1px_8px_rgba(0,0,0,0.02)] backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6 lg:px-8">
+
+        {/* Logo */}
+        <div className="flex items-center gap-4 md:gap-6">
           <a
             href="/"
-            onClick={(e) => handleNavClick(e, '/')}
-            className="flex items-center gap-2 group text-decoration-none"
+            onClick={(event) => handleNavigation(event, '/')}
+            className="group flex items-center gap-2"
           >
-            <span className="material-symbols-outlined text-primary text-2xl transition-transform group-hover:-rotate-6">
-              school
-            </span>
-            <div className="flex flex-col">
-              <span className="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-1.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#00288e] text-white shadow-sm">
+              <span className="material-symbols-outlined text-[21px]">
+                school
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold tracking-tight text-[#1b1b1e] transition-colors group-hover:text-[#00288e]">
                 CampusShelf
-                <span className="font-label-stamp text-label-stamp bg-surface-container text-on-surface-variant px-1.5 py-0.5 rounded border border-outline-variant/50">
-                  CS
-                </span>
+              </span>
+
+              <span className="rounded border border-[#c4c5d5]/60 bg-[#f0edf1] px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-[#444653]">
+                CS
               </span>
             </div>
           </a>
 
-          <div className="h-5 w-[1px] bg-outline-variant/60 hidden md:block"></div>
+          {/* Divider */}
+          <div className="hidden h-5 w-px bg-[#c4c5d5]/60 md:block" />
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            <a
-              href="/"
-              onClick={(e) => handleNavClick(e, '/')}
-              aria-current={isHome ? 'page' : undefined}
-              className={`font-label-lg text-label-lg transition-colors relative py-1 ${
-                isHome
-                  ? 'text-primary font-bold after:content-[\'\'] after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[2.5px] after:bg-primary-container after:rounded-full'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
-            >
-              Home
-            </a>
-            <a
-              href="/browse"
-              onClick={(e) => handleNavClick(e, '/browse')}
-              aria-current={isBrowse ? 'page' : undefined}
-              className={`font-label-lg text-label-lg transition-colors relative py-1 ${
-                isBrowse
-                  ? 'text-primary font-semibold pen-underline'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
-            >
-              Browse
-            </a>
-            <a
-              href="/list-resource"
-              onClick={(e) => handleNavClick(e, '/list-resource')}
-              className="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1"
-            >
-              List Resource
-            </a>
-            <a
-              href="/wishlist"
-              onClick={(e) => handleNavClick(e, '/wishlist')}
-              className="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1"
-            >
-              Wishlist
-            </a>
-            <a
-              href="/requests"
-              onClick={(e) => handleNavClick(e, '/requests')}
-              className="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1"
-            >
-              Requests
-            </a>
+          <nav className="hidden items-center gap-7 md:flex">
+            {navItems.map((item) => {
+              const isActive = currentPath === item.path;
+
+              return (
+                <a
+                  key={item.path}
+                  href={item.path}
+                  onClick={(event) =>
+                    handleNavigation(event, item.path)
+                  }
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`relative py-5 text-sm font-semibold transition-colors ${
+                    isActive
+                      ? 'text-[#00288e]'
+                      : 'text-[#444653] hover:text-[#00288e]'
+                  }`}
+                >
+                  {item.label}
+
+                  {/* ACTIVE BLUE UNDERLINE */}
+                  {isActive && (
+                    <span
+                      className="absolute bottom-1 left-0 right-0 mx-auto h-1 rounded-full bg-[#3157c7]"
+                      aria-hidden="true"
+                    />
+                  )}
+                </a>
+              );
+            })}
           </nav>
         </div>
 
-        {/* Right Side Actions */}
-        <div className="flex items-center gap-4">
+        {/* Right Side */}
+        <div className="flex items-center gap-3">
+          {/* Notifications */}
           <button
             type="button"
             aria-label="Notifications"
-            onClick={() => navigateTo('/notifications')}
-            className="relative p-1.5 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer"
+            className="relative rounded-md p-2 text-[#444653] transition-colors hover:bg-[#f0edf1] hover:text-[#1b1b1e]"
+            onClick={() => {
+              window.history.pushState({}, '', '/notifications');
+              setCurrentPath('/notifications');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
           >
-            <span className="material-symbols-outlined text-[22px]">notifications</span>
-            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-secondary ring-2 ring-[#faf7f2]"></span>
+            <span className="material-symbols-outlined text-[22px]">
+              notifications
+            </span>
+
+            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#bb0112] ring-2 ring-[#faf7f2]" />
           </button>
 
-          <div className="h-6 w-[1px] bg-outline-variant/60 hidden sm:block"></div>
+          {/* Divider */}
+          <div className="hidden h-6 w-px bg-[#c4c5d5]/60 sm:block" />
 
-          <a
-            href="/profile"
-            onClick={(e) => handleNavClick(e, '/profile')}
-            className="flex items-center pl-1 cursor-pointer"
-          >
-            <div className="relative rounded-full ring-1 ring-outline-variant/80 p-0.5 hover:ring-primary transition-all">
-              <img
-                alt={HOME_IMAGES.profileAvatar.alt}
-                src={HOME_IMAGES.profileAvatar.src}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = HOME_IMAGES.profileAvatar.fallback;
-                }}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            </div>
-          </a>
-
-          {/* Mobile menu button */}
+          {/* Profile */}
           <button
             type="button"
-            aria-label="Toggle menu"
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="md:hidden p-2 text-on-surface-variant hover:text-on-surface rounded-md cursor-pointer"
+            aria-label="Profile"
+            onClick={() => {
+              window.history.pushState({}, '', '/profile');
+              setCurrentPath('/profile');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
+            className="flex items-center"
           >
-            <span className="material-symbols-outlined text-2xl">
-              {mobileMenuOpen ? 'close' : 'menu'}
-            </span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#c4c5d5] bg-[#f0edf1] text-[#00288e] transition-all hover:border-[#00288e]">
+              <span className="material-symbols-outlined text-[21px]">
+                person
+              </span>
+            </div>
           </button>
         </div>
       </div>
 
-      {/* Mobile Dropdown Navigation */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#faf7f2] border-b border-outline-variant/30 px-6 py-4 flex flex-col gap-3 shadow-lg">
-          <a
-            href="/"
-            onClick={(e) => handleNavClick(e, '/')}
-            className={`py-1 pl-3 ${
-              isHome
-                ? 'text-primary font-bold border-l-2 border-primary-container'
-                : 'text-on-surface-variant hover:text-on-surface'
-            }`}
-          >
-            Home
-          </a>
-          <a
-            href="/browse"
-            onClick={(e) => handleNavClick(e, '/browse')}
-            className={`py-1 pl-3 ${
-              isBrowse
-                ? 'text-primary font-bold border-l-2 border-primary-container'
-                : 'text-on-surface-variant hover:text-on-surface'
-            }`}
-          >
-            Browse
-          </a>
-          <a
-            href="/list-resource"
-            onClick={(e) => handleNavClick(e, '/list-resource')}
-            className="py-1 text-on-surface-variant hover:text-on-surface pl-3"
-          >
-            List Resource
-          </a>
-          <a
-            href="/wishlist"
-            onClick={(e) => handleNavClick(e, '/wishlist')}
-            className="py-1 text-on-surface-variant hover:text-on-surface pl-3"
-          >
-            Wishlist
-          </a>
-          <a
-            href="/requests"
-            onClick={(e) => handleNavClick(e, '/requests')}
-            className="py-1 text-on-surface-variant hover:text-on-surface pl-3"
-          >
-            Requests
-          </a>
-        </div>
-      )}
+      {/* Mobile Navigation */}
+      <div className="border-t border-[#c4c5d5]/40 md:hidden">
+        <nav className="flex overflow-x-auto px-4">
+          {navItems.map((item) => {
+            const isActive = currentPath === item.path;
+
+            return (
+              <a
+                key={item.path}
+                href={item.path}
+                onClick={(event) =>
+                  handleNavigation(event, item.path)
+                }
+                aria-current={isActive ? 'page' : undefined}
+                className={`relative whitespace-nowrap px-4 py-3 text-sm font-semibold transition-colors ${
+                  isActive
+                    ? 'text-[#00288e]'
+                    : 'text-[#444653] hover:text-[#00288e]'
+                }`}
+              >
+                {item.label}
+
+                {isActive && (
+                  <span
+                    className="absolute bottom-0 left-4 right-4 h-1 rounded-full bg-[#3157c7]"
+                    aria-hidden="true"
+                  />
+                )}
+              </a>
+            );
+          })}
+        </nav>
+      </div>
     </header>
   );
-};
+}
